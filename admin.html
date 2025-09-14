@@ -66,76 +66,53 @@
         </div>
     </div>
     
-    <script type="module">
-        // Firebase imports
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, doc, deleteDoc, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    <script>
+        const tableBody = document.getElementById('registrations-table-body');
+        const loadingSpinner = document.getElementById('loading-spinner');
+        const noDataMessage = document.getElementById('no-data');
+
+        // IMPORTANT: Replace this with your npoint.io URL
+        const NPOINT_API_URL = 'https://api.npoint.io/4301d0dfe30b615b2dc0';
         
-        setLogLevel('debug'); // Enable Firestore debug logging
-
-        let db;
-        let auth;
-        let appId = 'default-app-id';
-
-        // Initialize Firebase
-        const initializeFirebase = async () => {
-            try {
-                const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-                const app = initializeApp(firebaseConfig);
-                auth = getAuth(app);
-                db = getFirestore(app);
-                appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-
-                // Sign in with custom token or anonymously
-                const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-                if (initialAuthToken) {
-                    await signInWithCustomToken(auth, initialAuthToken);
-                } else {
-                    await signInAnonymously(auth);
-                }
-
-            } catch (error) {
-                console.error("Error initializing Firebase:", error);
-            }
-        };
-
         // Fetch and display registrations
-        const fetchRegistrations = () => {
-            const tableBody = document.getElementById('registrations-table-body');
-            const loadingSpinner = document.getElementById('loading-spinner');
-            const noDataMessage = document.getElementById('no-data');
-
-            // Show loading spinner initially
+        const fetchRegistrations = async () => {
             loadingSpinner.classList.remove('hidden');
             tableBody.innerHTML = '';
             noDataMessage.classList.add('hidden');
 
-            // Removed orderBy to avoid the index issue
-            const q = query(collection(db, `artifacts/${appId}/public/data/registrations`));
-            
-            onSnapshot(q, (snapshot) => {
+            try {
+                const response = await fetch(NPOINT_API_URL);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                
                 loadingSpinner.classList.add('hidden');
                 
-                if (snapshot.empty) {
+                if (Object.keys(data).length === 0) {
                     noDataMessage.classList.remove('hidden');
                     return;
                 }
 
-                tableBody.innerHTML = '';
+                // If data is not an array, convert it to an array
+                const submissions = Array.isArray(data) ? data : (Object.keys(data).length > 0 ? Object.values(data) : []);
+
+                if (submissions.length === 0) {
+                    noDataMessage.classList.remove('hidden');
+                    return;
+                }
+                
                 let index = 1;
-                snapshot.forEach((doc) => {
-                    const data = doc.data();
+                submissions.forEach(submission => {
                     const row = `
                         <tr class="table-row-container hover:bg-gray-50">
                             <td class="py-4 px-4 whitespace-nowrap text-sm text-gray-500">${index++}</td>
-                            <td class="py-4 px-4 whitespace-nowrap text-sm text-gray-900">${data.fullName}</td>
-                            <td class="py-4 px-4 whitespace-nowrap text-sm text-gray-500">${data.dob}</td>
-                            <td class="py-4 px-4 whitespace-nowrap text-sm text-gray-500">${data.ageCategory}</td>
-                            <td class="py-4 px-4 whitespace-nowrap text-sm text-gray-500">${data.registrationId}</td>
+                            <td class="py-4 px-4 whitespace-nowrap text-sm text-gray-900">${submission.fullName}</td>
+                            <td class="py-4 px-4 whitespace-nowrap text-sm text-gray-500">${submission.dob}</td>
+                            <td class="py-4 px-4 whitespace-nowrap text-sm text-gray-500">${submission.ageCategory}</td>
+                            <td class="py-4 px-4 whitespace-nowrap text-sm text-gray-500">${submission.registrationId}</td>
                             <td class="py-4 px-4 whitespace-nowrap text-center text-sm font-medium">
-                                <button onclick="deleteRegistration('${doc.id}')" class="text-red-600 hover:text-red-900 transition duration-300">
+                                <button onclick="alert('Delete functionality is not available with this simple JSON storage method.')" class="text-gray-400 cursor-not-allowed">
                                     <i class="fas fa-trash-alt"></i>
                                     <span class="sr-only">Delete</span>
                                 </button>
@@ -144,29 +121,17 @@
                     `;
                     tableBody.innerHTML += row;
                 });
-            }, (error) => {
+
+            } catch (error) {
                 console.error("Error getting documents:", error);
                 loadingSpinner.classList.add('hidden');
-                document.getElementById('no-data').textContent = 'حدث خطأ في تحميل البيانات.';
-                document.getElementById('no-data').classList.remove('hidden');
-            });
-        };
-        
-        // Delete registration function
-        window.deleteRegistration = async (docId) => {
-            try {
-                await deleteDoc(doc(db, `artifacts/${appId}/public/data/registrations`, docId));
-                console.log("Document successfully deleted!");
-            } catch (error) {
-                console.error("Error removing document: ", error);
+                noDataMessage.textContent = 'حدث خطأ في تحميل البيانات.';
+                noDataMessage.classList.remove('hidden');
             }
         };
-        
-        // Initialize Firebase and fetch data on window load
-        window.onload = async () => {
-            await initializeFirebase();
-            fetchRegistrations();
-        };
+
+        // Initialize on window load
+        window.onload = fetchRegistrations;
     </script>
 </body>
 </html>
