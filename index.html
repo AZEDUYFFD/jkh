@@ -3,22 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل انتقاء لنادي جيل الرياضي قصرالحيران</title>
-
+    <title>تسجيل نادي جيل قصر الحيران</title>
+    
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-
+    
     <!-- Google Fonts - Tajawal -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
-
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
         body {
             font-family: 'Tajawal', sans-serif;
             background-color: #f3f4f6;
         }
-
         .container {
             border: 1px solid #e5e7eb;
         }
@@ -26,148 +28,155 @@
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
 
-    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-xl container w-full max-w-2xl mx-auto">
-        <div class="text-center mb-8">
-            <h1 class="text-3xl md:text-4xl font-extrabold text-red-600">نادي جيل قصر الحيران</h1>
-            <p class="text-gray-600 mt-2">يرجى ملء النموذج أدناه لإكمال عملية التسجيل.</p>
+    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-xl container w-full max-w-lg mx-auto">
+        <div class="text-center mb-6">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-red-600">تسجيل اللاعبين</h1>
+            <p class="text-gray-600 mt-2">نادي جيل قصر الحيران</p>
         </div>
 
-        <form id="registration-form" class="space-y-6">
+        <!-- Success/Error Message Box -->
+        <div id="message-box" class="hidden fixed top-4 left-1/2 transform -translate-x-1/2 p-4 rounded-xl shadow-lg z-50 transition-all duration-500 ease-in-out">
+            <p id="message-text" class="text-white text-center font-bold"></p>
+        </div>
 
+        <form id="registration-form" class="space-y-4">
+            
             <!-- Full Name -->
             <div>
-                <label for="full-name" class="block text-sm font-medium text-gray-700">الاسم الكامل</label>
-                <input type="text" id="full-name" name="fullName" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
-            </div>
-
-            <!-- Date of Birth -->
-            <div>
-                <label for="dob" class="block text-sm font-medium text-gray-700">تاريخ الميلاد</label>
-                <input type="date" id="dob" name="dob" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
-            </div>
-
-            <!-- Email -->
-            <div>
-                <label for="email" class="block text-sm font-medium text-gray-700">البريد الإلكتروني</label>
-                <input type="email" id="email" name="email" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
+                <label for="full-name" class="block text-right text-sm font-medium text-gray-700">الاسم الكامل</label>
+                <input type="text" id="full-name" name="fullName" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm p-2 text-right" placeholder="أدخل اسمك الكامل">
             </div>
 
             <!-- Phone Number -->
             <div>
-                <label for="phone" class="block text-sm font-medium text-gray-700">رقم الهاتف</label>
-                <input type="tel" id="phone" name="phone" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
+                <label for="phone" class="block text-right text-sm font-medium text-gray-700">رقم الهاتف</label>
+                <input type="tel" id="phone" name="phone" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm p-2 text-right" placeholder="أدخل رقم هاتفك">
             </div>
-
+            
+            <!-- Date of Birth -->
+            <div>
+                <label for="dob" class="block text-right text-sm font-medium text-gray-700">تاريخ الميلاد</label>
+                <input type="date" id="dob" name="dob" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm p-2 text-right">
+            </div>
+            
             <!-- Age Category -->
             <div>
-                <label for="age-category" class="block text-sm font-medium text-gray-700">الفئة العمرية</label>
-                <select id="age-category" name="ageCategory" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
-                    <option value="">اختر فئة</option>
-                    <option value="شباب">شباب</option>
-                    <option value="ناشئين">ناشئين</option>
-                    <option value="صغار">صغار</option>
+                <label for="age-category" class="block text-right text-sm font-medium text-gray-700">الفئة العمرية</label>
+                <select id="age-category" name="ageCategory" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm p-2 text-right">
+                    <option value="" disabled selected>اختر فئة</option>
+                    <option value="ناشئين">ناشئين (10 - 14)</option>
+                    <option value="شباب">شباب (15 - 20)</option>
+                    <option value="رجال">رجال (21 فأكثر)</option>
                 </select>
             </div>
 
             <!-- Additional Notes -->
             <div>
-                <label for="notes" class="block text-sm font-medium text-gray-700">ملاحظات إضافية (اختياري)</label>
-                <textarea id="notes" name="notes" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm"></textarea>
+                <label for="notes" class="block text-right text-sm font-medium text-gray-700">ملاحظات إضافية (اختياري)</label>
+                <textarea id="notes" name="notes" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm p-2 text-right" placeholder="أضف أي ملاحظات هنا"></textarea>
             </div>
 
-            <!-- Error/Success Messages -->
-            <div id="status-message" class="text-center p-3 rounded-md hidden"></div>
-
             <!-- Submit Button -->
-            <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-300">
-                إرسال طلب التسجيل
-            </button>
+            <div class="text-center">
+                <button type="submit" class="w-full inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-bold rounded-full shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-transform transform hover:scale-105">
+                    <span id="button-text">إرسال طلب التسجيل</span>
+                    <i id="loading-spinner" class="fas fa-spinner fa-spin ml-2 hidden"></i>
+                </button>
+            </div>
         </form>
     </div>
-
-    <!-- Confirmation Modal -->
-    <div id="confirmation-modal" class="fixed inset-0 bg-gray-600 bg-opacity-75 hidden items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-sm text-center">
-            <h3 class="text-lg font-bold text-gray-900 mb-4">تم الإرسال بنجاح!</h3>
-            <p id="modal-message" class="text-sm text-gray-600 mb-6"></p>
-            <button id="close-modal-btn" type="button" class="w-full justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-300">
-                إغلاق
-            </button>
-        </div>
-    </div>
     
-    <script type="module">
-        const form = document.getElementById('registration-form');
-        const statusMessage = document.getElementById('status-message');
-        const confirmationModal = document.getElementById('confirmation-modal');
-        const modalMessage = document.getElementById('modal-message');
-        const closeModalBtn = document.getElementById('close-modal-btn');
-
-        // IMPORTANT: Replace this with your npoint.io URL
+    <script>
+        // Set the max date to today and min date to a reasonable past date
+        const today = new Date().toISOString().split('T')[0];
+        const minDate = '1920-01-01'; // A reasonable past date
+        document.getElementById('dob').setAttribute('max', today);
+        document.getElementById('dob').setAttribute('min', minDate);
+        
+        // IMPORTANT: Replace with your npoint.io URL
         const NPOINT_API_URL = 'https://api.npoint.io/4301d0dfe30b615b2dc0';
+        
+        const form = document.getElementById('registration-form');
+        const messageBox = document.getElementById('message-box');
+        const messageText = document.getElementById('message-text');
+        const buttonText = document.getElementById('button-text');
+        const loadingSpinner = document.getElementById('loading-spinner');
 
-        // Function to show status messages
-        const showStatusMessage = (message, isSuccess) => {
-            statusMessage.textContent = message;
-            statusMessage.classList.remove('hidden', 'bg-red-100', 'text-red-700', 'bg-green-100', 'text-green-700');
+        // Function to show a message (success or error)
+        const showMessage = (message, isSuccess) => {
+            messageText.textContent = message;
+            messageBox.classList.remove('hidden');
             if (isSuccess) {
-                statusMessage.classList.add('bg-green-100', 'text-green-700');
+                messageBox.style.backgroundColor = '#10B981'; // Green for success
+                messageBox.style.top = '1rem';
             } else {
-                statusMessage.classList.add('bg-red-100', 'text-red-700');
+                messageBox.style.backgroundColor = '#EF4444'; // Red for error
+                messageBox.style.top = '1rem';
             }
+            setTimeout(() => {
+                messageBox.style.top = '-5rem'; // Hide the message box
+                setTimeout(() => {
+                    messageBox.classList.add('hidden');
+                }, 500);
+            }, 5000);
         };
 
-        // Handle form submission
+        const resetForm = () => {
+            form.reset();
+        };
+
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
-
+            
+            buttonText.classList.add('hidden');
+            loadingSpinner.classList.remove('hidden');
+            
             const formData = new FormData(form);
-            const data = Object.fromEntries(formData.entries());
-            const registrationId = crypto.randomUUID().slice(0, 8).toUpperCase();
-            data.registrationId = registrationId;
-            data.timestamp = new Date().toISOString();
-
+            const data = {
+                fullName: formData.get('fullName'),
+                phone: formData.get('phone'),
+                dob: formData.get('dob'),
+                ageCategory: formData.get('ageCategory'),
+                notes: formData.get('notes')
+            };
+            
             try {
-                // Get current data from npoint.io
-                const currentDataResponse = await fetch(NPOINT_API_URL);
-                const currentData = await currentDataResponse.json();
+                // Fetch existing data
+                const existingResponse = await fetch(NPOINT_API_URL);
+                if (!existingResponse.ok) {
+                    throw new Error('Failed to fetch existing data from npoint.io');
+                }
+                const existingData = await existingResponse.json();
 
-                // Check if data is an object and convert to array if needed
-                let submissions = Array.isArray(currentData) ? currentData : (Object.keys(currentData).length > 0 ? Object.values(currentData) : []);
-
-                // Add the new submission to the array
+                // Check if existingData is an array, if not, create one
+                const submissions = Array.isArray(existingData) ? existingData : Object.values(existingData);
                 submissions.push(data);
-                
+
+                // Update the npoint.io data with the new submission
                 const response = await fetch(NPOINT_API_URL, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(submissions)
                 });
-
-                if (response.ok) {
-                    modalMessage.textContent = `تم تسجيل طلبك بنجاح. رقم تسجيلك هو: ${registrationId}. يرجى الاحتفاظ به.`;
-                    confirmationModal.classList.remove('hidden');
-                    confirmationModal.classList.add('flex');
-                    form.reset();
-                    showStatusMessage('تم الإرسال بنجاح!', true);
-                } else {
-                    console.error("Error submitting data:", response.statusText);
-                    showStatusMessage('حدث خطأ أثناء الإرسال. يرجى المحاولة مرة أخرى.', false);
+                
+                if (!response.ok) {
+                    throw new Error('Failed to submit data');
                 }
 
+                showMessage('تم إرسال طلب التسجيل بنجاح!', true);
+                resetForm();
+
             } catch (error) {
-                console.error("Error adding document: ", error);
-                showStatusMessage('حدث خطأ أثناء الإرسال. يرجى المحاولة مرة أخرى.', false);
+                console.error("Submission error:", error);
+                showMessage('حدث خطأ أثناء الإرسال. يرجى المحاولة مرة أخرى.', false);
+            } finally {
+                buttonText.classList.remove('hidden');
+                loadingSpinner.classList.add('hidden');
             }
         });
 
-        // Close modal event
-        closeModalBtn.addEventListener('click', () => {
-            confirmationModal.classList.remove('flex');
-            confirmationModal.classList.add('hidden');
-        });
     </script>
 </body>
 </html>
