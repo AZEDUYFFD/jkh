@@ -13,9 +13,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <style>
         body {
             font-family: 'Tajawal', sans-serif;
@@ -24,14 +21,6 @@
 
         .container {
             border: 1px solid #e5e7eb;
-        }
-
-        .error-message {
-            display: none;
-        }
-
-        .success-message {
-            display: none;
         }
     </style>
 </head>
@@ -108,23 +97,14 @@
     </div>
     
     <script type="module">
-        // Firebase imports
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        
-        setLogLevel('debug'); // Enable Firestore debug logging
-
-        let db;
-        let auth;
-        let appId = 'default-app-id';
-
         const form = document.getElementById('registration-form');
         const statusMessage = document.getElementById('status-message');
         const confirmationModal = document.getElementById('confirmation-modal');
         const modalMessage = document.getElementById('modal-message');
         const closeModalBtn = document.getElementById('close-modal-btn');
+
+        // IMPORTANT: Replace this with your npoint.io URL
+        const NPOINT_API_URL = 'https://api.npoint.io/4301d0dfe30b615b2dc0';
 
         // Function to show status messages
         const showStatusMessage = (message, isSuccess) => {
@@ -137,54 +117,45 @@
             }
         };
 
-        // Initialize Firebase
-        const initializeFirebase = async () => {
-            try {
-                const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-                const app = initializeApp(firebaseConfig);
-                auth = getAuth(app);
-                db = getFirestore(app);
-                appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-
-                const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-                if (initialAuthToken) {
-                    await signInWithCustomToken(auth, initialAuthToken);
-                } else {
-                    await signInAnonymously(auth);
-                }
-
-            } catch (error) {
-                console.error("Error initializing Firebase:", error);
-                showStatusMessage('حدث خطأ في تهيئة النظام. يرجى المحاولة لاحقًا.', false);
-            }
-        };
-
         // Handle form submission
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
-
-            // Check if Firebase is initialized
-            if (!db) {
-                showStatusMessage('النظام غير جاهز بعد. يرجى المحاولة مرة أخرى.', false);
-                return;
-            }
 
             const formData = new FormData(form);
             const data = Object.fromEntries(formData.entries());
             const registrationId = crypto.randomUUID().slice(0, 8).toUpperCase();
             data.registrationId = registrationId;
-            data.timestamp = new Date();
+            data.timestamp = new Date().toISOString();
 
             try {
-                // Add a new document to the 'registrations' collection
-                const docRef = await addDoc(collection(db, `artifacts/${appId}/public/data/registrations`), data);
-                console.log("Document written with ID: ", docRef.id);
+                // Get current data from npoint.io
+                const currentDataResponse = await fetch(NPOINT_API_URL);
+                const currentData = await currentDataResponse.json();
 
-                modalMessage.textContent = `تم تسجيل طلبك بنجاح. رقم تسجيلك هو: ${registrationId}. يرجى الاحتفاظ به.`;
-                confirmationModal.classList.remove('hidden');
-                confirmationModal.classList.add('flex');
-                form.reset();
-                showStatusMessage('تم الإرسال بنجاح!', true);
+                // Check if data is an object and convert to array if needed
+                let submissions = Array.isArray(currentData) ? currentData : (Object.keys(currentData).length > 0 ? Object.values(currentData) : []);
+
+                // Add the new submission to the array
+                submissions.push(data);
+                
+                const response = await fetch(NPOINT_API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(submissions)
+                });
+
+                if (response.ok) {
+                    modalMessage.textContent = `تم تسجيل طلبك بنجاح. رقم تسجيلك هو: ${registrationId}. يرجى الاحتفاظ به.`;
+                    confirmationModal.classList.remove('hidden');
+                    confirmationModal.classList.add('flex');
+                    form.reset();
+                    showStatusMessage('تم الإرسال بنجاح!', true);
+                } else {
+                    console.error("Error submitting data:", response.statusText);
+                    showStatusMessage('حدث خطأ أثناء الإرسال. يرجى المحاولة مرة أخرى.', false);
+                }
 
             } catch (error) {
                 console.error("Error adding document: ", error);
@@ -197,9 +168,6 @@
             confirmationModal.classList.remove('flex');
             confirmationModal.classList.add('hidden');
         });
-
-        // Initialize Firebase on window load
-        window.onload = initializeFirebase;
     </script>
 </body>
 </html>
