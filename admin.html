@@ -113,7 +113,7 @@
             noDataMessage.classList.add('hidden');
 
             // Removed orderBy to avoid the index issue
-            const q = query(collection(db, `artifacts/${appId}/public/registrations`));
+            const q = query(collection(db, `artifacts/${appId}/public/data/registrations`));
             
             onSnapshot(q, (snapshot) => {
                 loadingSpinner.classList.add('hidden');
@@ -155,7 +155,7 @@
         // Delete registration function
         window.deleteRegistration = async (docId) => {
             try {
-                await deleteDoc(doc(db, `artifacts/${appId}/public/registrations`, docId));
+                await deleteDoc(doc(db, `artifacts/${appId}/public/data/registrations`, docId));
                 console.log("Document successfully deleted!");
             } catch (error) {
                 console.error("Error removing document: ", error);
