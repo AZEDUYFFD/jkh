@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم المسؤول - نادي جيل قصر الحيران</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts - Tajawal -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .container {
+            border: 1px solid #e5e7eb;
+        }
+        .table-row-container {
+            transition: all 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+
+    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-xl container w-full max-w-5xl mx-auto">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-red-600">لوحة تحكم المسؤول</h1>
+            <p class="text-gray-600 mt-2">عرض طلبات تسجيل اللاعبين</p>
+        </div>
+
+        <div id="loading-spinner" class="text-center text-gray-500 hidden">
+            <i class="fas fa-spinner fa-spin text-3xl"></i>
+            <p class="mt-2">جاري تحميل البيانات...</p>
+        </div>
+
+        <div id="no-data" class="text-center text-gray-500 hidden">
+            <p class="text-lg">لا توجد طلبات تسجيل حتى الآن.</p>
+        </div>
+
+        <!-- Registrations Table -->
+        <div id="registrations-container" class="overflow-x-auto">
+            <table class="min-w-full bg-white rounded-xl shadow-lg">
+                <thead class="bg-gray-200">
+                    <tr>
+                        <th class="py-3 px-4 text-sm font-semibold text-gray-700 uppercase tracking-wider text-right rounded-tr-xl">#</th>
+                        <th class="py-3 px-4 text-sm font-semibold text-gray-700 uppercase tracking-wider text-right">الاسم الكامل</th>
+                        <th class="py-3 px-4 text-sm font-semibold text-gray-700 uppercase tracking-wider text-right">تاريخ الميلاد</th>
+                        <th class="py-3 px-4 text-sm font-semibold text-gray-700 uppercase tracking-wider text-right">الفئة العمرية</th>
+                        <th class="py-3 px-4 text-sm font-semibold text-gray-700 uppercase tracking-wider text-right">رقم التسجيل</th>
+                        <th class="py-3 px-4 text-sm font-semibold text-gray-700 uppercase tracking-wider text-center rounded-tl-xl">الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody id="registrations-table-body" class="divide-y divide-gray-200">
+                    <!-- Data will be inserted here by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <script type="module">
+        // Firebase imports
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, doc, deleteDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        
+        setLogLevel('debug'); // Enable Firestore debug logging
+
+        let db;
+        let auth;
+        let appId = 'default-app-id';
+
+        // Initialize Firebase
+        const initializeFirebase = async () => {
+            try {
+                const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+                const app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+                appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+                // Sign in with custom token or anonymously
+                const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+            } catch (error) {
+                console.error("Error initializing Firebase:", error);
+            }
+        };
+
+        // Fetch and display registrations
+        const fetchRegistrations = () => {
+            const tableBody = document.getElementById('registrations-table-body');
+            const loadingSpinner = document.getElementById('loading-spinner');
+            const noDataMessage = document.getElementById('no-data');
+
+            // Show loading spinner initially
+            loadingSpinner.classList.remove('hidden');
+            tableBody.innerHTML = '';
+            noDataMessage.classList.add('hidden');
+
+            const q = query(collection(db, `artifacts/${appId}/public/registrations`));
+            
+            onSnapshot(q, (snapshot) => {
+                loadingSpinner.classList.add('hidden');
+                
+                if (snapshot.empty) {
+                    noDataMessage.classList.remove('hidden');
+                    return;
+                }
+
+                tableBody.innerHTML = '';
+                let index = 1;
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const row = `
+                        <tr class="table-row-container hover:bg-gray-50">
+                            <td class="py-4 px-4 whitespace-nowrap text-sm text-gray-500">${index++}</td>
+                            <td class="py-4 px-4 whitespace-nowrap text-sm text-gray-900">${data.fullName}</td>
+                            <td class="py-4 px-4 whitespace-nowrap text-sm text-gray-500">${data.dob}</td>
+                            <td class="py-4 px-4 whitespace-nowrap text-sm text-gray-500">${data.ageCategory}</td>
+                            <td class="py-4 px-4 whitespace-nowrap text-sm text-gray-500">${data.registrationId}</td>
+                            <td class="py-4 px-4 whitespace-nowrap text-center text-sm font-medium">
+                                <button onclick="deleteRegistration('${doc.id}')" class="text-red-600 hover:text-red-900 transition duration-300">
+                                    <i class="fas fa-trash-alt"></i>
+                                    <span class="sr-only">Delete</span>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                    tableBody.innerHTML += row;
+                });
+            }, (error) => {
+                console.error("Error getting documents:", error);
+                loadingSpinner.classList.add('hidden');
+                document.getElementById('no-data').textContent = 'حدث خطأ في تحميل البيانات.';
+                document.getElementById('no-data').classList.remove('hidden');
+            });
+        };
+        
+        // Delete registration function
+        window.deleteRegistration = async (docId) => {
+            try {
+                await deleteDoc(doc(db, `artifacts/${appId}/public/registrations`, docId));
+                console.log("Document successfully deleted!");
+            } catch (error) {
+                console.error("Error removing document: ", error);
+            }
+        };
+        
+        // Initialize Firebase and fetch data on window load
+        window.onload = async () => {
+            await initializeFirebase();
+            fetchRegistrations();
+        };
+    </script>
+</body>
+</html>
