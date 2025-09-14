@@ -3,97 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نادي جيل قصر الحيران</title>
-    
+    <title>تسجيل انتقاء لنادي جيل الرياضي قصرالحيران</title>
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <!-- Google Fonts - Tajawal -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
-    
+
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <style>
         body {
             font-family: 'Tajawal', sans-serif;
             background-color: #f3f4f6;
         }
-        .form-container {
+
+        .container {
             border: 1px solid #e5e7eb;
+        }
+
+        .error-message {
+            display: none;
+        }
+
+        .success-message {
+            display: none;
         }
     </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
 
-    <div class="bg-white p-8 md:p-12 rounded-2xl shadow-xl form-container w-full max-w-2xl mx-auto m-6">
+    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-xl container w-full max-w-2xl mx-auto">
         <div class="text-center mb-8">
             <h1 class="text-3xl md:text-4xl font-extrabold text-red-600">نادي جيل قصر الحيران</h1>
             <p class="text-gray-600 mt-2">يرجى ملء النموذج أدناه لإكمال عملية التسجيل.</p>
         </div>
 
-        <!-- Form fields will go here -->
         <form id="registration-form" class="space-y-6">
+
             <!-- Full Name -->
             <div>
-                <label for="full-name" class="block text-gray-700 font-semibold mb-2">الاسم الكامل</label>
-                <input type="text" id="full-name" name="fullName" required class="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-300">
+                <label for="full-name" class="block text-sm font-medium text-gray-700">الاسم الكامل</label>
+                <input type="text" id="full-name" name="fullName" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
             </div>
 
             <!-- Date of Birth -->
             <div>
-                <label for="dob" class="block text-gray-700 font-semibold mb-2">تاريخ الميلاد</label>
-                <input type="date" id="dob" name="dob" required class="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-300">
+                <label for="dob" class="block text-sm font-medium text-gray-700">تاريخ الميلاد</label>
+                <input type="date" id="dob" name="dob" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
             </div>
-            
-            <!-- Email Address -->
+
+            <!-- Email -->
             <div>
-                <label for="email" class="block text-gray-700 font-semibold mb-2">البريد الإلكتروني</label>
-                <input type="email" id="email" name="email" required class="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-300">
+                <label for="email" class="block text-sm font-medium text-gray-700">البريد الإلكتروني</label>
+                <input type="email" id="email" name="email" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
             </div>
 
             <!-- Phone Number -->
             <div>
-                <label for="phone" class="block text-gray-700 font-semibold mb-2">رقم الهاتف</label>
-                <input type="tel" id="phone" name="phone" required class="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-300">
+                <label for="phone" class="block text-sm font-medium text-gray-700">رقم الهاتف</label>
+                <input type="tel" id="phone" name="phone" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
             </div>
 
             <!-- Age Category -->
             <div>
-                <label for="age-category" class="block text-gray-700 font-semibold mb-2">الفئة العمرية</label>
-                <select id="age-category" name="ageCategory" required class="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-300">
-                    <option value="" disabled selected>اختر الفئة</option>
-                    <option value="ناشئين">ناشئين</option>
+                <label for="age-category" class="block text-sm font-medium text-gray-700">الفئة العمرية</label>
+                <select id="age-category" name="ageCategory" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm">
+                    <option value="">اختر فئة</option>
                     <option value="شباب">شباب</option>
+                    <option value="ناشئين">ناشئين</option>
+                    <option value="صغار">صغار</option>
                 </select>
             </div>
-            
-            <!-- Additional Message -->
+
+            <!-- Additional Notes -->
             <div>
-                <label for="message" class="block text-gray-700 font-semibold mb-2">ملاحظات إضافية (اختياري)</label>
-                <textarea id="message" name="message" rows="4" class="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-300"></textarea>
+                <label for="notes" class="block text-sm font-medium text-gray-700">ملاحظات إضافية (اختياري)</label>
+                <textarea id="notes" name="notes" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm"></textarea>
             </div>
 
-            <!-- Submission Button -->
-            <button type="submit" id="submit-btn" class="w-full bg-red-600 text-white font-bold py-3 px-6 rounded-full hover:bg-red-700 transition duration-300 flex items-center justify-center">
+            <!-- Error/Success Messages -->
+            <div id="status-message" class="text-center p-3 rounded-md hidden"></div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-300">
                 إرسال طلب التسجيل
             </button>
         </form>
-
-        <!-- Loading & Success/Error Messages -->
-        <div id="status-message" class="mt-6 text-center text-lg font-semibold hidden"></div>
-
-        <!-- Hidden Input for User ID -->
-        <input type="hidden" id="user-id-input">
     </div>
 
-    <!-- Modal for confirmation -->
-    <div id="modal" class="modal fixed inset-0 flex items-center justify-center p-4 bg-gray-900 bg-opacity-50 hidden">
-        <div class="bg-white rounded-lg p-8 shadow-2xl text-center max-w-sm w-full mx-auto">
-            <p id="modal-message" class="text-lg text-gray-700 mb-6"></p>
-            <button id="modal-close-btn" class="bg-red-600 text-white font-bold py-2 px-6 rounded-full hover:bg-red-700 transition duration-300">إغلاق</button>
+    <!-- Confirmation Modal -->
+    <div id="confirmation-modal" class="fixed inset-0 bg-gray-600 bg-opacity-75 hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-sm text-center">
+            <h3 class="text-lg font-bold text-gray-900 mb-4">تم الإرسال بنجاح!</h3>
+            <p id="modal-message" class="text-sm text-gray-600 mb-6"></p>
+            <button id="close-modal-btn" type="button" class="w-full justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-300">
+                إغلاق
+            </button>
         </div>
     </div>
     
@@ -101,15 +111,31 @@
         // Firebase imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         
         setLogLevel('debug'); // Enable Firestore debug logging
 
         let db;
         let auth;
-        let userId = '';
         let appId = 'default-app-id';
+
+        const form = document.getElementById('registration-form');
+        const statusMessage = document.getElementById('status-message');
+        const confirmationModal = document.getElementById('confirmation-modal');
+        const modalMessage = document.getElementById('modal-message');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+
+        // Function to show status messages
+        const showStatusMessage = (message, isSuccess) => {
+            statusMessage.textContent = message;
+            statusMessage.classList.remove('hidden', 'bg-red-100', 'text-red-700', 'bg-green-100', 'text-green-700');
+            if (isSuccess) {
+                statusMessage.classList.add('bg-green-100', 'text-green-700');
+            } else {
+                statusMessage.classList.add('bg-red-100', 'text-red-700');
+            }
+        };
 
         // Initialize Firebase
         const initializeFirebase = async () => {
@@ -120,77 +146,56 @@
                 db = getFirestore(app);
                 appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 
-                // Sign in with custom token or anonymously
                 const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
                 if (initialAuthToken) {
                     await signInWithCustomToken(auth, initialAuthToken);
                 } else {
                     await signInAnonymously(auth);
                 }
-                
-                // Set the user ID in the hidden input field after authentication
-                auth.onAuthStateChanged(user => {
-                    if (user) {
-                        userId = user.uid;
-                        document.getElementById('user-id-input').value = userId;
-                    }
-                });
 
             } catch (error) {
                 console.error("Error initializing Firebase:", error);
+                showStatusMessage('حدث خطأ في تهيئة النظام. يرجى المحاولة لاحقًا.', false);
             }
         };
 
-        // Form submission handler
-        document.getElementById('registration-form').addEventListener('submit', async (e) => {
+        // Handle form submission
+        form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            const submitBtn = document.getElementById('submit-btn');
-            const statusMessage = document.getElementById('status-message');
+            // Check if Firebase is initialized
+            if (!db) {
+                showStatusMessage('النظام غير جاهز بعد. يرجى المحاولة مرة أخرى.', false);
+                return;
+            }
 
-            // Show loading state
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin ml-2"></i> جاري الإرسال...';
-            statusMessage.textContent = '';
-            statusMessage.classList.add('hidden');
-
-            const formData = new FormData(e.target);
+            const formData = new FormData(form);
             const data = Object.fromEntries(formData.entries());
-            data.timestamp = serverTimestamp(); // Add server timestamp
-            
+            const registrationId = crypto.randomUUID().slice(0, 8).toUpperCase();
+            data.registrationId = registrationId;
+            data.timestamp = new Date();
+
             try {
-                // Generate a unique registration ID
-                const registrationId = crypto.randomUUID();
-                data.registrationId = registrationId;
+                // Add a new document to the 'registrations' collection
+                const docRef = await addDoc(collection(db, `artifacts/${appId}/public/data/registrations`), data);
+                console.log("Document written with ID: ", docRef.id);
 
-                // Save registration to a public collection for easy access
-                const docRef = await addDoc(collection(db, `artifacts/${appId}/public/registrations`), data);
+                modalMessage.textContent = `تم تسجيل طلبك بنجاح. رقم تسجيلك هو: ${registrationId}. يرجى الاحتفاظ به.`;
+                confirmationModal.classList.remove('hidden');
+                confirmationModal.classList.add('flex');
+                form.reset();
+                showStatusMessage('تم الإرسال بنجاح!', true);
 
-                console.log("Document written with ID:", docRef.id);
-                showModal(`تم إرسال طلبك بنجاح! رقم التسجيل الخاص بك هو: <br><br><b>${registrationId}</b><br><br>يرجى الاحتفاظ به للمتابعة.`, 'green');
-                e.target.reset(); // Reset form fields
             } catch (error) {
                 console.error("Error adding document: ", error);
-                showModal('حدث خطأ أثناء الإرسال. يرجى المحاولة مرة أخرى.', 'red');
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = 'إرسال طلب التسجيل';
+                showStatusMessage('حدث خطأ أثناء الإرسال. يرجى المحاولة مرة أخرى.', false);
             }
         });
 
-        // Modal functions
-        const modal = document.getElementById('modal');
-        const modalMessage = document.getElementById('modal-message');
-        const modalCloseBtn = document.getElementById('modal-close-btn');
-
-        const showModal = (message, color) => {
-            modalMessage.innerHTML = message;
-            modalMessage.className = `text-lg mb-6 ${color === 'green' ? 'text-green-600' : 'text-red-600'}`;
-            modal.classList.remove('hidden');
-        };
-
-        modalCloseBtn.addEventListener('click', () => {
-            modal.classList.add('hidden');
+        // Close modal event
+        closeModalBtn.addEventListener('click', () => {
+            confirmationModal.classList.remove('flex');
+            confirmationModal.classList.add('hidden');
         });
 
         // Initialize Firebase on window load
