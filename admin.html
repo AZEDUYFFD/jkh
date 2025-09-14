@@ -70,7 +70,7 @@
         // Firebase imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, doc, deleteDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, doc, deleteDoc, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         
         setLogLevel('debug'); // Enable Firestore debug logging
@@ -112,6 +112,7 @@
             tableBody.innerHTML = '';
             noDataMessage.classList.add('hidden');
 
+            // Removed orderBy to avoid the index issue
             const q = query(collection(db, `artifacts/${appId}/public/registrations`));
             
             onSnapshot(q, (snapshot) => {
