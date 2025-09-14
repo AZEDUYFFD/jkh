@@ -53,8 +53,11 @@
                     <tr>
                         <th class="py-3 px-4 text-sm font-semibold text-gray-700 uppercase tracking-wider text-right rounded-tr-xl">#</th>
                         <th class="py-3 px-4 text-sm font-semibold text-gray-700 uppercase tracking-wider text-right">الاسم الكامل</th>
+                        <th class="py-3 px-4 text-sm font-semibold text-gray-700 uppercase tracking-wider text-right">البريد الإلكتروني</th>
+                        <th class="py-3 px-4 text-sm font-semibold text-gray-700 uppercase tracking-wider text-right">رقم الهاتف</th>
                         <th class="py-3 px-4 text-sm font-semibold text-gray-700 uppercase tracking-wider text-right">تاريخ الميلاد</th>
                         <th class="py-3 px-4 text-sm font-semibold text-gray-700 uppercase tracking-wider text-right">الفئة العمرية</th>
+                        <th class="py-3 px-4 text-sm font-semibold text-gray-700 uppercase tracking-wider text-right">ملاحظات إضافية</th>
                         <th class="py-3 px-4 text-sm font-semibold text-gray-700 uppercase tracking-wider text-right">رقم التسجيل</th>
                         <th class="py-3 px-4 text-sm font-semibold text-gray-700 uppercase tracking-wider text-center rounded-tl-xl">الإجراءات</th>
                     </tr>
@@ -63,6 +66,12 @@
                     <!-- Data will be inserted here by JavaScript -->
                 </tbody>
             </table>
+        </div>
+
+        <div class="flex justify-center mt-6">
+            <button onclick="clearAllRegistrations()" class="bg-red-500 text-white font-bold py-2 px-6 rounded-full hover:bg-red-600 transition duration-300 transform hover:scale-105">
+                مسح جميع المسجلين
+            </button>
         </div>
     </div>
     
@@ -108,8 +117,11 @@
                         <tr class="table-row-container hover:bg-gray-50">
                             <td class="py-4 px-4 whitespace-nowrap text-sm text-gray-500">${index++}</td>
                             <td class="py-4 px-4 whitespace-nowrap text-sm text-gray-900">${submission.fullName}</td>
+                            <td class="py-4 px-4 whitespace-nowrap text-sm text-gray-900">${submission.email}</td>
+                            <td class="py-4 px-4 whitespace-nowrap text-sm text-gray-900">${submission.phone}</td>
                             <td class="py-4 px-4 whitespace-nowrap text-sm text-gray-500">${submission.dob}</td>
                             <td class="py-4 px-4 whitespace-nowrap text-sm text-gray-500">${submission.ageCategory}</td>
+                            <td class="py-4 px-4 whitespace-nowrap text-sm text-gray-500">${submission.notes || 'لا يوجد'}</td>
                             <td class="py-4 px-4 whitespace-nowrap text-sm text-gray-500">${submission.registrationId}</td>
                             <td class="py-4 px-4 whitespace-nowrap text-center text-sm font-medium">
                                 <button onclick="alert('Delete functionality is not available with this simple JSON storage method.')" class="text-gray-400 cursor-not-allowed">
@@ -127,6 +139,33 @@
                 loadingSpinner.classList.add('hidden');
                 noDataMessage.textContent = 'حدث خطأ في تحميل البيانات.';
                 noDataMessage.classList.remove('hidden');
+            }
+        };
+
+        const clearAllRegistrations = async () => {
+            const confirmation = confirm("هل أنت متأكد من أنك تريد مسح جميع بيانات التسجيل؟ لا يمكن التراجع عن هذا الإجراء.");
+            if (!confirmation) {
+                return;
+            }
+
+            try {
+                const response = await fetch(NPOINT_API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({})
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to clear data');
+                }
+
+                fetchRegistrations(); // Refresh the table
+                alert("تم مسح جميع المسجلين بنجاح.");
+            } catch (error) {
+                console.error("Error clearing data:", error);
+                alert("حدث خطأ أثناء مسح البيانات. يرجى المحاولة مرة أخرى.");
             }
         };
 
